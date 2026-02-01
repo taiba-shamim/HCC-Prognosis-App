@@ -31,6 +31,19 @@
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
         }
+        /* Override Tailwind gradient color variables to customize header/button gradients */
+        :root {
+            --tw-gradient-to: #0c2062 var(--tw-gradient-to-position);
+            --tw-gradient-from: #545f7e var(--tw-gradient-from-position);
+        }
+        /* Ensure Tailwind gradient utility classes use the requested colors */
+        .to-blue-800 {
+            --tw-gradient-to: #0c2062 var(--tw-gradient-to-position) !important;
+        }
+
+        .from-blue-900 {
+            --tw-gradient-from: #545f7e var(--tw-gradient-from-position) !important;
+        }
     </style>
 </head>
 <body class="text-gray-900">
@@ -69,10 +82,10 @@
     <div class="relative z-10 container mx-auto px-6 mt-6">
         <div class="flex space-x-4 bg-white/80 backdrop-blur-sm p-2 rounded-xl border-2 border-yellow-400 shadow-lg">
             <button onclick="showTab('input')" id="inputTab" class="flex-1 py-3 px-6 rounded-lg font-semibold transition-all duration-300 bg-gradient-to-r from-yellow-400 to-yellow-600 text-blue-900 shadow-lg">
-                📋 Patient Input
+                Patient Input
             </button>
             <button onclick="showTab('results')" id="resultsTab" class="flex-1 py-3 px-6 rounded-lg font-semibold transition-all duration-300 text-blue-900 hover:bg-yellow-100">
-                📊 Prognosis Results
+                 Prognosis Results
             </button>
         </div>
     </div>
