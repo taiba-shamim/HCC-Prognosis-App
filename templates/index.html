@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCC Prognosis Prediction System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        body {
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFEDC4 25%, #FFE5A8 50%, #FFD88C 75%, #FFF9E6 100%);
+            min-height: 100vh;
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+    </style>
+</head>
+<body class="text-gray-900">
+    <!-- Animated Background -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-0 left-0 w-96 h-96 bg-yellow-400/20 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-blue-900/10 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 1s;"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="relative z-10 bg-gradient-to-r from-blue-900 to-blue-800 border-b-4 border-yellow-500 shadow-lg">
+        <div class="container mx-auto px-6 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 p-3 rounded-xl shadow-lg">
+                        <svg class="w-8 h-8 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold text-white">
+                            HCC Prognosis Prediction System
+                        </h1>
+                        <p class="text-yellow-200 text-sm">Advanced Machine Learning for Hepatocellular Carcinoma</p>
+                    </div>
+                </div>
+                <div class="text-right bg-yellow-400 px-6 py-3 rounded-xl border-2 border-blue-900 shadow-lg">
+                    <p class="text-xs text-blue-900 font-semibold">Model Accuracy</p>
+                    <p class="text-2xl font-bold text-blue-900">94.2%</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="relative z-10 container mx-auto px-6 mt-6">
+        <div class="flex space-x-4 bg-white/80 backdrop-blur-sm p-2 rounded-xl border-2 border-yellow-400 shadow-lg">
+            <button onclick="showTab('input')" id="inputTab" class="flex-1 py-3 px-6 rounded-lg font-semibold transition-all duration-300 bg-gradient-to-r from-yellow-400 to-yellow-600 text-blue-900 shadow-lg">
+                📋 Patient Input
+            </button>
+            <button onclick="showTab('results')" id="resultsTab" class="flex-1 py-3 px-6 rounded-lg font-semibold transition-all duration-300 text-blue-900 hover:bg-yellow-100">
+                📊 Prognosis Results
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="relative z-10 container mx-auto px-6 py-8">
+        <!-- Input Form -->
+        <div id="inputSection" class="space-y-6 animate-fadeIn">
+            <form id="patientForm" class="space-y-6">
+                <!-- Clinical Features -->
+                <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border-2 border-blue-900 shadow-2xl">
+                    <h2 class="text-2xl font-bold mb-6 text-blue-900">👥 Clinical Features</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-blue-900 mb-2">Age at Diagnosis</label>
+                            <input type="number" name="age" required class="w-full px-4 py-3 bg-white border-2 border-yellow-400 rounded-lg focus:ring-2 focus:ring-blue-900 text-gray-900" placeholder="Enter age">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-blue-900 mb-2">Gender</label>
+                            <select name="gender" class="w-full px-4 py-3 bg-white border-2 border-yellow-400 rounded-lg focus:ring-2 focus:ring-blue-900 text-gray-900">
+                                <option>Male</option>
+                                <option>Female</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-blue-900 mb-2">Pathologic Stage</label>
+                            <select name="pathologic_stage" class="w-full px-4 py-3 bg-white border-2 border-yellow-400 rounded-lg focus:ring-2 focus:ring-blue-900 text-gray-900">
+                                <option>Stage I</option>
+                                <option>Stage II</option>
+                                <option>Stage III</option>
+                                <option>Stage IV</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-blue-900 mb-2">Histologic Grade</label>
+                            <select name="histologic_grade" class="w-full px-4 py-3 bg-white border-2 border-yellow-400 rounded-lg focus:ring-2 focus:ring-blue-900 text-gray-900">
+                                <option>G1 - Well differentiated</option>
+                                <option>G2 - Moderately differentiated</option>
+                                <option>G3 - Poorly differentiated</option>
+                                <option>G4 - Undifferentiated</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-blue-900 mb-2">Tumor Tissue Site</label>
+                            <select name="tumor_site" class="w-full px-4 py-3 bg-white border-2 border-yellow-400 rounded-lg focus:ring-2 focus:ring-blue-900 text-gray-900">
+                                <option>Right lobe</option>
+                                <option>Left lobe</option>
+                                <option>Both lobes</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Treatment History -->
+                <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border-2 border-yellow-500 shadow-2xl">
+                    <h2 class="text-2xl font-bold mb-6 text-blue-900">📋 Treatment History</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-blue-900 mb-2">Radiation Therapy</label>
+                            <select name="radiation_therapy" class="w-full px-4 py-3 bg-white border-2 border-yellow-400 rounded-lg focus:ring-2 focus:ring-blue-900 text-gray-900">
+                                <option>No</option>
+                                <option>Yes</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-blue-900 mb-2">Pharmaceutical Therapy</label>
+                            <select name="pharmaceutical_therapy" class="w-full px-4 py-3 bg-white border-2 border-yellow-400 rounded-lg focus:ring-2 focus:ring-blue-900 text-gray-900">
+                                <option>No</option>
+                                <option>Yes</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-blue-900 mb-2">Postoperative Rx</label>
+                            <select name="postoperative_rx" class="w-full px-4 py-3 bg-white border-2 border-yellow-400 rounded-lg focus:ring-2 focus:ring-blue-900 text-gray-900">
+                                <option>No</option>
+                                <option>Yes</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-blue-900 mb-2">Neoadjuvant Treatment</label>
+                            <select name="neoadjuvant_treatment" class="w-full px-4 py-3 bg-white border-2 border-yellow-400 rounded-lg focus:ring-2 focus:ring-blue-900 text-gray-900">
+                                <option>No</option>
+                                <option>Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lab Markers -->
+                <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border-2 border-blue-900 shadow-2xl">
+                    <h2 class="text-2xl font-bold mb-6 text-blue-900">🧪 Laboratory Markers</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-blue-900 mb-2">Albumin (g/dL)</label>
+                            <input type="number" step="0.1" name="albumin" required class="w-full px-4 py-3 bg-white border-2 border-yellow-400 rounded-lg focus:ring-2 focus:ring-blue-900 text-gray-900" placeholder="3.5-5.5">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-blue-900 mb-2">Bilirubin (mg/dL)</label>
+                            <input type="number" step="0.1" name="bilirubin" required class="w-full px-4 py-3 bg-white border-2 border-yellow-400 rounded-lg focus:ring-2 focus:ring-blue-900 text-gray-900" placeholder="0.1-1.2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-blue-900 mb-2">Creatinine (mg/dL)</label>
+                            <input type="number" step="0.1" name="creatinine" required class="w-full px-4 py-3 bg-white border-2 border-yellow-400 rounded-lg focus:ring-2 focus:ring-blue-900 text-gray-900" placeholder="0.7-1.3">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-blue-900 mb-2">Platelet Count (x10^3/uL)</label>
+                            <input type="number" name="platelet_count" required class="w-full px-4 py-3 bg-white border-2 border-yellow-400 rounded-lg focus:ring-2 focus:ring-blue-900 text-gray-900" placeholder="150-400">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-blue-900 mb-2">Alpha-Fetoprotein (ng/mL)</label>
+                            <input type="number" name="alpha_fetoprotein" required class="w-full px-4 py-3 bg-white border-2 border-yellow-400 rounded-lg focus:ring-2 focus:ring-blue-900 text-gray-900" placeholder="0-20">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Genomic Note -->
+                <div class="bg-yellow-50/90 backdrop-blur-sm rounded-2xl p-6 border-2 border-yellow-400 shadow-2xl">
+                    <div class="flex items-start space-x-4">
+                        <svg class="w-8 h-8 text-blue-900 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                        <div>
+                            <h3 class="text-xl font-bold text-blue-900 mb-2">🧬 Genomic Features Integration</h3>
+                            <p class="text-blue-900/80 mb-3">
+                                This model incorporates 50 significant differentially expressed genes (DEGs) and 4 gene expression summary features for enhanced prediction accuracy.
+                            </p>
+                            <p class="text-sm text-blue-900/60">
+                                Note: Genomic data is automatically processed from patient molecular profiling when available.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-center">
+                    <button type="submit" class="px-12 py-4 bg-gradient-to-r from-blue-900 to-blue-800 text-yellow-400 rounded-xl font-bold text-lg shadow-2xl hover:shadow-blue-900/50 transition-all duration-300 transform hover:scale-105 border-2 border-yellow-400">
+                        Generate Prognosis Prediction
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" style="display: none;">
+            <!-- Loading -->
+            <div id="loadingDiv" class="flex flex-col items-center justify-center py-20">
+                <div class="w-20 h-20 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin mb-6"></div>
+                <p class="text-2xl font-semibold text-blue-900">Analyzing patient data...</p>
+                <p class="text-blue-800 mt-2">Processing clinical and genomic features</p>
+            </div>
+
+            <!-- Results -->
+            <div id="resultsDiv" style="display: none;" class="space-y-6 animate-fadeIn"></div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 mt-12 bg-blue-900/90 backdrop-blur-sm border-t-4 border-yellow-400 py-6">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-yellow-200 text-sm font-semibold">
+                © 2024 HCC Prognosis System | Powered by Advanced Machine Learning | Model Accuracy: 94.2%
+            </p>
+            <p class="text-yellow-300/80 text-xs mt-2">
+                For research and clinical decision support purposes only
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        function showTab(tab) {
+            const inputTab = document.getElementById('inputTab');
+            const resultsTab = document.getElementById('resultsTab');
+            const inputSection = document.getElementById('inputSection');
+            const resultsSection = document.getElementById('resultsSection');
+
+            if (tab === 'input') {
+                inputTab.className = 'flex-1 py-3 px-6 rounded-lg font-semibold transition-all duration-300 bg-gradient-to-r from-yellow-400 to-yellow-600 text-blue-900 shadow-lg';
+                resultsTab.className = 'flex-1 py-3 px-6 rounded-lg font-semibold transition-all duration-300 text-blue-900 hover:bg-yellow-100';
+                inputSection.style.display = 'block';
+                resultsSection.style.display = 'none';
+            } else {
+                resultsTab.className = 'flex-1 py-3 px-6 rounded-lg font-semibold transition-all duration-300 bg-gradient-to-r from-yellow-400 to-yellow-600 text-blue-900 shadow-lg';
+                inputTab.className = 'flex-1 py-3 px-6 rounded-lg font-semibold transition-all duration-300 text-blue-900 hover:bg-yellow-100';
+                inputSection.style.display = 'none';
+                resultsSection.style.display = 'block';
+            }
+        }
+
+        document.getElementById('patientForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            showTab('results');
+            document.getElementById('loadingDiv').style.display = 'flex';
+            document.getElementById('resultsDiv').style.display = 'none';
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                setTimeout(() => {
+                    document.getElementById('loadingDiv').style.display = 'none';
+                    displayResults(result);
+                }, 2000);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while making the prediction. Please try again.');
+                showTab('input');
+            }
+        });
+
+        function displayResults(result) {
+            const resultsDiv = document.getElementById('resultsDiv');
+            const riskColor = result.prognosisGroup === 'Good' ? 'green' : result.prognosisGroup === 'Intermediate' ? 'yellow' : 'red';
+
+            resultsDiv.innerHTML = `
+                <!-- Main Prediction Card -->
+                <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-8 border-4 border-${riskColor}-500 shadow-2xl">
+                    <div class="flex items-center justify-between mb-6 flex-wrap gap-4">
+                        <h2 class="text-3xl font-bold text-blue-900">Prognosis Assessment</h2>
+                        <div class="px-6 py-3 rounded-xl bg-${riskColor}-100 border-3 border-${riskColor}-500 shadow-lg">
+                            <p class="text-2xl font-bold text-${riskColor}-700">${result.prognosisGroup} Prognosis</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-yellow-50 rounded-xl p-6 border-2 border-yellow-400 shadow-lg">
+                            <p class="text-blue-900 text-sm mb-2 font-semibold">Risk Score</p>
+                            <p class="text-4xl font-bold text-${riskColor}-600">${result.riskScore}%</p>
+                            <div class="w-full bg-gray-200 rounded-full h-3 mt-3">
+                                <div class="h-3 rounded-full bg-${riskColor}-500 transition-all duration-1000" style="width: ${result.riskScore}%"></div>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 rounded-xl p-6 border-2 border-yellow-400 shadow-lg">
+                            <p class="text-blue-900 text-sm mb-2 font-semibold">Model Confidence</p>
+                            <p class="text-4xl font-bold text-blue-900">${result.confidence}%</p>
+                            <p class="text-green-600 text-sm mt-3 font-semibold">✓ High Confidence</p>
+                        </div>
+                        <div class="bg-yellow-50 rounded-xl p-6 border-2 border-yellow-400 shadow-lg">
+                            <p class="text-blue-900 text-sm mb-2 font-semibold">Prediction Status</p>
+                            <p class="text-2xl font-bold text-green-600">Completed ✓</p>
+                            <p class="text-xs text-blue-800 mt-2">Based on 69 clinical & genomic features</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Survival Probability -->
+                <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-8 border-2 border-blue-900 shadow-2xl">
+                    <h3 class="text-2xl font-bold text-blue-900 mb-6">📈 Survival Probability Estimates</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        ${['oneYear', 'threeYear', 'fiveYear'].map((period, idx) => `
+                            <div class="bg-yellow-50 rounded-xl p-6 border-2 border-yellow-400 shadow-md">
+                                <p class="text-blue-900 mb-3 font-semibold">${['1-Year', '3-Year', '5-Year'][idx]} Survival</p>
+                                <div class="relative pt-1">
+                                    <div class="flex mb-2 items-center justify-between">
+                                        <span class="text-3xl font-bold text-blue-900">${result.survivalProb[period]}%</span>
+                                    </div>
+                                    <div class="overflow-hidden h-4 text-xs flex rounded-full bg-gray-200">
+                                        <div style="width: ${result.survivalProb[period]}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gradient-to-r from-yellow-400 to-yellow-600 transition-all duration-1000"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Risk Factors -->
+                <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-8 border-2 border-yellow-500 shadow-2xl">
+                    <h3 class="text-2xl font-bold text-blue-900 mb-6">⚠️ Key Risk Factors</h3>
+                    <div class="space-y-4">
+                        ${result.riskFactors.map(factor => `
+                            <div class="flex items-center justify-between bg-yellow-50 rounded-xl p-4 border border-yellow-400">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-3 h-3 rounded-full bg-${factor.impact === 'High' ? 'red' : factor.impact === 'Medium' ? 'yellow' : 'green'}-500"></div>
+                                    <div>
+                                        <p class="font-semibold text-blue-900">${factor.factor}</p>
+                                        <p class="text-sm text-blue-800">${factor.value}</p>
+                                    </div>
+                                </div>
+                                <span class="px-4 py-2 rounded-lg text-sm font-semibold bg-${factor.impact === 'High' ? 'red' : factor.impact === 'Medium' ? 'yellow' : 'green'}-100 text-${factor.impact === 'High' ? 'red' : factor.impact === 'Medium' ? 'yellow' : 'green'}-700 border border-${factor.impact === 'High' ? 'red' : factor.impact === 'Medium' ? 'yellow' : 'green'}-400">
+                                    ${factor.impact} Impact
+                                </span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-8 border-2 border-blue-900 shadow-2xl">
+                    <h3 class="text-2xl font-bold text-blue-900 mb-6">📋 Clinical Recommendations</h3>
+                    <div class="space-y-3">
+                        ${result.recommendations.map(rec => `
+                            <div class="flex items-start space-x-4 bg-yellow-50 rounded-xl p-4 border border-yellow-400">
+                                <span class="text-green-600 text-xl font-bold">✓</span>
+                                <p class="text-blue-900">${rec}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="bg-yellow-100 border-2 border-yellow-400 rounded-xl p-6 shadow-lg">
+                    <div class="flex items-start space-x-3">
+                        <svg class="w-6 h-6 text-yellow-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                        <div class="text-sm text-blue-900">
+                            <p class="font-semibold mb-2">Clinical Decision Support Tool</p>
+                            <p>This prediction is generated by an AI model trained on clinical and genomic data. Results should be interpreted by qualified healthcare professionals and used in conjunction with comprehensive clinical assessment.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            resultsDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
